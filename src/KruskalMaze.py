@@ -5,8 +5,11 @@ from Interface import Interface
 
 
 class KruskalMaze(Maze):
+    """разновидность лабиринта с построением алгоритмом крускала"""
 
     def __init__(self, interface, height, width):
+        """Заводятся вспомогательные для алгоритма крускала массивы parent - предок вершины в дереве,
+        size - размер дерева, edges - рёбра клеточного графа"""
         super().__init__(interface, height, width)
         self.parent = [[-1 for j in range(self.m)] for i in range(self.n)]
         self.size = [[1 for j in range(self.m)] for i in range(self.n)]
@@ -19,6 +22,7 @@ class KruskalMaze(Maze):
                         self.edges.append(((i, j), (i1, j1)))
 
     def root(self, cell):
+        """Метод, возвращающий корень дерева с данной вершиной в соответствии с эвристикой сжатия путей"""
         i, j = cell
         if self.parent[i][j] == -1:
             return cell
@@ -26,6 +30,7 @@ class KruskalMaze(Maze):
         return self.parent[i][j]
 
     def unite(self, u, v):
+        """Объединяет два дерева, переподвешивая корни в соответствии с эвристикой по рангам"""
         u, v = self.root(u), self.root(v)
         if u == v:
             return
@@ -39,9 +44,12 @@ class KruskalMaze(Maze):
             self.size[i2][j2] = max(self.size[i2][j2], self.size[i1][j1] + 1)
 
     def make_cell(self, i, j):
+        """Создаём клетку по её координатам, цвету и информации о стенах"""
         return Cell(i, j, ["WHITE", *self.cell_info(i, j)])
 
     def gen(self):
+        """Рёбра графа перемешиваются в произвольном порядке (считаем что веса у них одинаковые), и запускается
+        алгоритм крускала на графе"""
         random.shuffle(self.edges)
         for e in self.edges:
             u, v = e

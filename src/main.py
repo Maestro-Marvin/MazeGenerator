@@ -6,6 +6,9 @@ from KruskalMaze import KruskalMaze
 from Maze import Maze
 import sys
 
+"""Парсятся аргументы из консоли, и выбирается тип лабиринта и вариант поиска пути 
+в зависимости от кастомизации пользователем"""
+
 if __name__ == "__main__":
     args = sys.argv[1:]
     algo, control, rows, cols = args
